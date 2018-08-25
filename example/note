@@ -1,0 +1,87 @@
+路由
+终端用户通过所谓的路由寻找到动作，路由是包含以下部分的字符串：
+
+模块ID: 仅存在于控制器属于非应用的模块;
+控制器ID: 同应用（或同模块如果为模块下的控制器） 下唯一标识控制器的字符串;
+操作ID: 同控制器下唯一标识操作的字符串。
+路由使用如下格式:
+
+ControllerID/ActionID
+如果属于模块下的控制器，使用如下格式：
+
+ModuleID/ControllerID/ActionID
+
+
+下面为一些示例，假设controller namespace 控制器命名空间为 app\controllers:
+
+article 对应 app\controllers\ArticleController;
+post-comment 对应 app\controllers\PostCommentController;
+admin/post-comment 对应 app\controllers\admin\PostCommentController;
+adminPanels/post-comment 对应 app\controllers\adminPanels\PostCommentController.
+
+
+
+控制器生命周期
+处理一个请求时，应用主体 会根据请求 路由创建一个控制器， 控制器经过以下生命周期来完成请求：
+
+在控制器创建和配置后，yii\base\Controller::init() 方法会被调用。
+控制器根据请求操作ID创建一个操作对象:
+如果操作ID没有指定，会使用default action ID默认操作ID；
+如果在action map找到操作ID， 会创建一个独立操作；
+如果操作ID对应操作方法，会创建一个内联操作；
+否则会抛出yii\base\InvalidRouteException异常。
+控制器按顺序调用应用主体、模块（如果控制器属于模块）、 控制器的 beforeAction() 方法；
+如果任意一个调用返回false，后面未调用的beforeAction()会跳过并且操作执行会被取消； action execution will be cancelled.
+默认情况下每个 beforeAction() 方法会触发一个 beforeAction 事件，在事件中你可以追加事件处理操作；
+控制器执行操作:
+请求数据解析和填入到操作参数；
+控制器按顺序调用控制器、模块（如果控制器属于模块）、应用主体的 afterAction() 方法；
+默认情况下每个 afterAction() 方法会触发一个 afterAction 事件， 在事件中你可以追加事件处理操作；
+应用主体获取操作结果并赋值给响应.
+
+
+
+组织视图
+与 控制器 和 模型 类似，在组织视图上有一些约定：
+
+控制器渲染的视图文件默认放在 @app/views/ControllerID 目录下， 其中 ControllerID 对应 控制器 ID, 例如控制器类为 PostController，视图文件目录应为 @app/views/post， 控制器类 PostCommentController对应的目录为 @app/views/post-comment， 如果是模块中的控制器，目录应为 module directory 模块目录下的 views/ControllerID 目录；
+对于 小部件 渲染的视图文件默认放在 WidgetPath/views 目录， 其中 WidgetPath 代表小部件类文件所在的目录；
+对于其他对象渲染的视图文件，建议遵循和小部件相似的规则。
+
+
+
+控制器中渲染
+在 控制器 中，可调用以下控制器方法来渲染视图：
+
+render(): 渲染一个 视图名 并使用一个 布局 返回到渲染结果。
+renderPartial(): 渲染一个 视图名 并且不使用布局。
+renderAjax(): 渲染一个 视图名 并且不使用布局， 并注入所有注册的JS/CSS脚本和文件，通常使用在响应AJAX网页请求的情况下。
+别名下的视图文件。
+
+
+
+使用过滤器
+过滤器本质上是一类特殊的 行为， 所以使用过滤器和 使用 行为一样。 可以在控制器类中覆盖它的 behaviors() 方法来声明过滤器，如下所示：
+
+
+
+运行机制概述
+每一次 Yii 应用开始处理 HTTP 请求时，它都会进行一个近似的流程。
+
+用户提交指向 入口脚本 web/index.php 的请求。
+入口脚本会加载 配置数组 并创建一个 应用 实例用于处理该请求。
+应用会通过 request（请求） 应用组件 解析被请求的 路由。
+应用创建一个 controller（控制器） 实例具体处理请求。
+控制器会创建一个 action（动作） 实例并为该动作执行相关的 Filters（访问过滤器）。
+如果任何一个过滤器验证失败，该动作会被取消。
+如果全部的过滤器都通过，该动作就会被执行。
+动作会加载一个数据模型，一般是从数据库中加载。
+动作会渲染一个 View（视图），并为其提供所需的数据模型。
+渲染得到的结果会返回给 response（响应） 应用组件。
+响应组件会把渲染结果发回给用户的浏览器。
+
+
+路由
+当入口脚本在调用 run() 方法时，它进行的第一个操作就是解析输入的请求，然后实例化对应的控制器动作处理这个请求。 该过程就被称为引导路由（routing）。 路由相反的操作会将给定的路由和参数生成一个可访问的URL地址， 这个操作叫做创建URL。 创建出来的URL被请求的时候，路由处理器可以解析成原始的路由信息和参数。
+
+负责路由解析和创建URL的组件是 URL管理器, URL管理器在程序组件中被注册成 urlManager。 URL管理器 提供方法 parseRequest() 来 解析请求的URL并返回路由信息和参数， 方法 createUrl() 用来根据提供的路由和参数创建一个可访问的URL。
