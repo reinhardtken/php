@@ -130,7 +130,8 @@ class SiteController extends Controller
 
     public function actionSay($message = 'Hello')
     {
-        return $this->render('say', ['message' => $message]);
+//        return $this->render('say', ['message' => $message]);
+        return $this->renderPartial('say', ['message' => $message]);
     }
 
 //    是的，其实数据首先由客户端 JavaScript 脚本验证，然后才会提交给服务器通过 PHP 验证。 yii\widgets\ActiveForm 足够智能到把你在 EntryForm 模型中声明的验证规则转化成客户端 JavaScript 脚本去执行验证。 如果用户浏览器禁用了 JavaScript， 服务器端仍然会像 actionEntry() 方法里这样验证一遍数据。这保证了任何情况下用户提交的数据都是有效的。
