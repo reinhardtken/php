@@ -1,0 +1,25 @@
+模型，数据规则
+https://www.yiichina.com/doc/guide/2.0/tutorial-core-validators
+
+class EntryForm extends Model
+{
+    public $name;
+    public $email;
+
+    public function rules()
+    {
+        return [
+            [['name', 'email'], 'required'],
+            ['email', 'email'],
+            ['name', 'string', 'length' => [4, 10]],
+        ];
+    }
+}
+
+
+
+将yii2和xdebug结合：
+随便搞个简单页面，用phpstorm启动
+记录&XDEBUG_SESSION_START=18348
+加到yii页面最后
+yii代码就可以断点了
