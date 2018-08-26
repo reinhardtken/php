@@ -85,3 +85,15 @@ renderAjax(): 渲染一个 视图名 并且不使用布局， 并注入所有注
 当入口脚本在调用 run() 方法时，它进行的第一个操作就是解析输入的请求，然后实例化对应的控制器动作处理这个请求。 该过程就被称为引导路由（routing）。 路由相反的操作会将给定的路由和参数生成一个可访问的URL地址， 这个操作叫做创建URL。 创建出来的URL被请求的时候，路由处理器可以解析成原始的路由信息和参数。
 
 负责路由解析和创建URL的组件是 URL管理器, URL管理器在程序组件中被注册成 urlManager。 URL管理器 提供方法 parseRequest() 来 解析请求的URL并返回路由信息和参数， 方法 createUrl() 用来根据提供的路由和参数创建一个可访问的URL。
+
+
+layout布局设置
+/home/ken/workspace/code/self/github/php/example/yiitest/vendor/yiisoft/yii2-debug/controllers/DefaultController.php
+class DefaultController extends Controller
+public $layout = 'main';
+
+
+viewpath
+/home/ken/workspace/code/self/github/php/example/yiitest/vendor/yiisoft/yii2/base/Module.php
+class Module extends ServiceLocator
+$this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'views';
