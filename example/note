@@ -97,3 +97,31 @@ viewpath
 /home/ken/workspace/code/self/github/php/example/yiitest/vendor/yiisoft/yii2/base/Module.php
 class Module extends ServiceLocator
 $this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'views';
+
+
+Yii提供了一个认证框架，它连接了不同的组件以支持登录。欲使用这个框架， 你主要需要做以下工作：
+设置用户组件 user ;
+创建一个类实现 yii\web\IdentityInterface 接口。
+
+
+
+// 当前用户的身份实例。未认证用户则为 Null 。
+$identity = Yii::$app->user->identity;
+// 当前用户的ID。 未认证用户则为 Null 。
+$id = Yii::$app->user->id;
+// 判断当前用户是否是游客（未认证的）
+$isGuest = Yii::$app->user->isGuest;
+
+
+
+预定义的别名（Predefined Aliases）
+Yii 预定义了一系列别名来简化常用路径和 URL 的使用：
+
+@yii，BaseYii.php 文件所在的目录（也被称为框架安装目录）。
+@app，当前运行的应用 根路径（base path）。
+@runtime，当前运行的应用的 运行环境（runtime）路径。默认为 @app/runtime。
+@webroot，当前运行的Web应用程序的Web根目录。 它是根据包含 入口脚本 的目录确定的。
+@web，当前运行的Web应用程序的 base URL。它的值与 yii\web\Request::$baseUrl 相同。
+@vendor，Composer vendor 目录。
+@bower，包含 bower 包 的根目录。默认为 @vendor/bower。
+@npm，包含 npm 包 的根目录。默认为 @vendor/npm。
