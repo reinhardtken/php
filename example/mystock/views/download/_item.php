@@ -12,6 +12,7 @@ use yii\helpers\HtmlPurifier;
 ?>
 <div class="post">
     <strong><?= Html::encode($model["id"]) ?></strong>
-    <a href="test/index/<?= $model["name"] ?>"><?= HtmlPurifier::process($model["name"]) ?> </a>
-    <a href="test/index/<?= $model['email'] ?>"><?= HtmlPurifier::process($model['email']) ?> </a>
+    <?= Html::encode($model["date"]) ?>
+    <a href="index.php?r=download/do&date=<?= $model["date"] ?>&file=<?= $model["name"] ?>"><?= HtmlPurifier::process($model["name"]) ?> </a>
+<!--    <a href="test/index/--><?//= $model['email'] ?><!--">--><?//= HtmlPurifier::process($model['email']) ?><!-- </a>-->
 </div>

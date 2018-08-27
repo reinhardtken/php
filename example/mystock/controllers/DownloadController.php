@@ -22,6 +22,7 @@ use yii\data\ArrayDataProvider;
 
 class DownloadController extends Controller
 {
+    private $path = "/home/ken/workspace/tmp";
     /**
      * {@inheritdoc}
      */
@@ -59,25 +60,48 @@ class DownloadController extends Controller
         //return $this->render('about');
     }
 
+    public function actionDo($date, $file)
+    {
+        $file2 = $this->path.'/'.$file;
+        return Yii::$app->response->sendFile($file2)->send();
+        //return $this->render('about');
+    }
+
     public function  actionTest2() {
-        $resultData = [
-            ["id"=>1,"name"=>"Cyrus","email"=>"risus@consequatdolorvitae.org"],
-            ["id"=>2,"name"=>"Justin","email"=>"ac.facilisis.facilisis@at.ca"],
-            ["id"=>3,"name"=>"Mason","email"=>"in.cursus.et@arcuacorci.ca"],
-            ["id"=>4,"name"=>"Fulton","email"=>"a@faucibusorciluctus.edu"]
-        ];
+        $out = $this->allFile();
+//        $resultData = [
+//            ["id"=>1,"name"=>"Cyrus","email"=>"risus@consequatdolorvitae.org"],
+//            ["id"=>2,"name"=>"Justin","email"=>"ac.facilisis.facilisis@at.ca"],
+//            ["id"=>3,"name"=>"Mason","email"=>"in.cursus.et@arcuacorci.ca"],
+//            ["id"=>4,"name"=>"Fulton","email"=>"a@faucibusorciluctus.edu"]
+//        ];
 
         $dataProvider = new ArrayDataProvider([
             'key'=>'id',
-            'allModels' => $resultData,
+            'allModels' => $out,
             'pagination' => false, // 可选 不分页
             'sort' => [
-                'attributes' => ['id', 'name', 'email'],
+                'attributes' => ['id', 'date', 'name',],
             ],
         ]);
 
         return $this->render('list', [
             'dataProvider' => $dataProvider
         ]);
+    }
+
+    private function allFile() {
+        $path = $this->path;
+        $out = array();
+        $index = 0;
+        foreach(glob("$path/*") as $filename)
+        {
+            $info = pathinfo($filename);
+            $file_name =  basename($filename,'.'.$info['extension']);
+
+            $out[$index] =  ["id"=>$index, 'date'=>'20180827', "name"=>$file_name.'.'.$info['extension']];
+            $index ++;
+        }
+        return $out;
     }
 }
